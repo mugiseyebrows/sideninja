@@ -30,10 +30,17 @@ def generate_build_file(cwd, flavour):
         uic_exe = 'pyuic6'
         rcc_exe = 'pyrcc6'
 
+    if flavour in [PYQT5, PYQT6]:
+        uic_command = f'{uic_exe} $in -x -o $out'
+    else:
+        uic_command = f'{uic_exe} $in -o $out'
+    
+    rcc_command = f'{rcc_exe} $in -o $out'
+
     RULES = f"""rule uic
-    command = {uic_exe} $in -o $out
+    command = {uic_command}
 rule rcc
-    command = {rcc_exe} $in -o $out
+    command = {rcc_command}
 """
     with open(os.path.join(cwd, 'build.ninja'), 'w', encoding='utf-8') as file:
         print(RULES, file=file)
